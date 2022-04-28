@@ -10,19 +10,16 @@ const packagesDir = path.resolve(__dirname, '../packages')
 const files = fs.readdirSync(packagesDir)
 
 files.forEach((shortName) => {
-  if (!fs.statSync(path.join(packagesDir, shortName)).isDirectory()) {
-    return
-  }
+  if (!fs.statSync(path.join(packagesDir, shortName)).isDirectory()) return
 
   const name =
     shortName === `color-utils` ? shortName : `@color-utils/${shortName}`
   const pkgPath = path.join(packagesDir, shortName, `package.json`)
   const pkgExists = fs.existsSync(pkgPath)
+
   if (pkgExists) {
     const pkg = require(pkgPath)
-    if (pkg.private) {
-      return
-    }
+    if (pkg.private) return
   }
 
   if (force || !pkgExists) {
@@ -41,7 +38,7 @@ files.forEach((shortName) => {
       bugs: {
         url: 'https://github.com/asonnleitner/color-utils/issues'
       },
-      homepage: `https://github.com/vuejs/vue/tree/dev/packages/${shortName}#readme`
+      homepage: `https://github.com/asonnleitner/color-utils/tree/dev/packages/${shortName}#readme`
     }
 
     fs.writeFileSync(pkgPath, JSON.stringify(json, null, 2))

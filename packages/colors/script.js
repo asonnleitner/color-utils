@@ -1,7 +1,5 @@
 // get color values from https://www.w3.org/TR/css-color-4/
 
-const table = document.querySelector('table.named-color-table')
-
 const getTableData = (table) => {
   const rows = Array.from(table.querySelectorAll('tbody tr'))
   const header = Array.from(table.querySelectorAll('thead tr'))
@@ -14,7 +12,8 @@ const getTableData = (table) => {
       )
     })
     .flat()
-  // remove "colorname" from headerData
+  // remove "colorname" from headerData as we get the name from the style
+  // attribute
   const index = headerData.indexOf('colorname')
   headerData.splice(index, 1)
 
@@ -43,9 +42,12 @@ const getTableData = (table) => {
 }
 
 // further data processing
-const obj = {}
-const colors = getTableData(table).forEach((d) => {
-  obj[d.named] = d.decimal
-})
+;(() => {
+  const table = document.querySelector('table.named-color-table')
+  const obj = {}
+  getTableData(table).forEach((d) => {
+    obj[d.named] = d.decimal
+  })
 
-console.log(obj)
+  console.log(obj)
+})()

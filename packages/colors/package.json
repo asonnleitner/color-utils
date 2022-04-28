@@ -1,13 +1,13 @@
 {
-  "name": "@color-utils/named",
+  "name": "@color-utils/colors",
   "version": "1.0.0",
-  "description": "@color-utils/named",
+  "description": "@color-utils/colors",
   "main": "index.js",
   "files": [
     "index.js",
     "dist"
   ],
-  "types": "dist/named.d.ts",
+  "types": "dist/colors.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/asonnleitner/color-utils.git"
@@ -16,5 +16,5 @@
   "bugs": {
     "url": "https://github.com/asonnleitner/color-utils/issues"
   },
-  "homepage": "https://github.com/vuejs/vue/tree/dev/packages/named#readme"
+  "homepage": "https://github.com/asonnleitner/color-utils/tree/dev/packages/colors#readme"
 }
