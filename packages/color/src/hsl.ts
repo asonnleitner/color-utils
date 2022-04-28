@@ -1,4 +1,4 @@
-import { isString } from './utils/string'
+import { clamp, flattenArrayable, isString, isUndefined } from './utils'
 import {
   MAX_ALPHA,
   MAX_HUE,
@@ -7,7 +7,6 @@ import {
   MIN_HUE,
   MIN_PERCENTAGE
 } from './constants'
-import { clamp, flattenArrayable, isUndefined } from './utils'
 
 export type HSL<
   Hue extends number,
