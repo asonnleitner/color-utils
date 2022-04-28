@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+    "sourceMap": false,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowJs": false,
+    "strict": true,
+    "noUnusedLocals": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
+    "types": [
+      "node",
+      "jest"
+    ],
+    "rootDir": ".",
+  },
+  "exclude": [
+    "node_modules",
+    "**/dist",
+    "**/__tests__/**/*"
+  ],
+  "include": [
+    "packages",
+    "scripts",
+    "typings"
+  ]
+}

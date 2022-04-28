@@ -1,0 +1,20 @@
+{
+  "name": "@color-utils/named",
+  "version": "1.0.0",
+  "description": "@color-utils/named",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/named.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asonnleitner/color-utils.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/asonnleitner/color-utils/issues"
+  },
+  "homepage": "https://github.com/vuejs/vue/tree/dev/packages/named#readme"
+}
