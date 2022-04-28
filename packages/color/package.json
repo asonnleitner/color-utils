@@ -1,0 +1,23 @@
+{
+  "name": "@color-utils/color",
+  "version": "1.0.0",
+  "description": "@color-utils/color",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/color.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asonnleitner/color-utils.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/asonnleitner/color-utils/issues"
+  },
+  "homepage": "https://github.com/asonnleitner/color-utils/tree/dev/packages/color#readme",
+  "dependencies": {
+    "@color-utils/colors": "workspace:^1.0.0"
+  }
+}
