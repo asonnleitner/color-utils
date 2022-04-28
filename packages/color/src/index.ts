@@ -1,4 +1,4 @@
-import { HWB, getHWB } from './hwb'
+import { getHWB } from './hwb'
 import { isString } from './utils'
 import { getHSL } from './hsl'
 import { getRGB } from './rgb'
