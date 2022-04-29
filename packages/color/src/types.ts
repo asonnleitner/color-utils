@@ -1,5 +1,3 @@
-export type Transparent = 'transparent'
-
 export type LAB<
   Lightness extends number,
   A extends number,

@@ -1,4 +1,4 @@
-import { flattenArrayable, isUndefined } from './utils'
+import { flatten, isUndefined } from './utils'
 import type { RGB } from './rgb'
 
 // convert decimal to hex
@@ -40,7 +40,7 @@ export function toHEX<T extends number>(
 ): string
 export function toHEX<T extends number>(...args: T[]): string
 export function toHEX(...rgb: any): any {
-  const [red, green, blue, alpha] = flattenArrayable(rgb)
+  const [red, green, blue, alpha] = flatten(rgb)
 
   return isUndefined(alpha)
     ? `#${hexHex(red)}${hexHex(green)}${hexHex(blue)}`

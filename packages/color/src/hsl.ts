@@ -1,4 +1,4 @@
-import { clamp, flattenArrayable, isString, isUndefined } from './utils'
+import { clamp, flatten, isString, isUndefined } from './utils'
 import {
   MAX_ALPHA,
   MAX_HUE,
@@ -48,13 +48,12 @@ export function toHSL<T extends number>(
 ): string
 export function toHSL<T extends number>(...args: T[]): string
 export function toHSL(...hsl: any): any {
-  const [hue, saturation, lightness, alpha] = flattenArrayable(hsl).map(
-    (v, i) =>
-      i === 0
-        ? clamp(v, MIN_HUE, MAX_HUE)
-        : i === 3
-        ? clamp(v, MIN_ALPHA, MAX_ALPHA)
-        : clamp(v, MIN_PERCENTAGE, MAX_PERCENTAGE)
+  const [hue, saturation, lightness, alpha] = flatten(hsl).map((v, i) =>
+    i === 0
+      ? clamp(v, MIN_HUE, MAX_HUE)
+      : i === 3
+      ? clamp(v, MIN_ALPHA, MAX_ALPHA)
+      : clamp(v, MIN_PERCENTAGE, MAX_PERCENTAGE)
   )
 
   return isUndefined(alpha)

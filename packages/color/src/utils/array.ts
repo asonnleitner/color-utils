@@ -1,17 +1,25 @@
 export type Nullable<T> = T | null | undefined
 
-export type Arrayable<T> = T | Array<T>
+export type Many<T> = T | ReadonlyArray<T>
 
 export const isArray = Array.isArray
 
-export const toArray = <T>(a?: Nullable<Arrayable<T>>): Array<T> => {
+type ToArray = {
+  <T>(a?: Nullable<Record<string | number, T>>): Array<T>
+  <T>(a?: Nullable<Many<T>>): Array<T>
+  <T>(a?: T): Array<T[keyof T]>
+}
+
+export const toArray: ToArray = (a): any[] => {
   a = a || []
   return isArray(a) ? a : [a]
 }
 
-export const flattenArrayable = <T>(
-  a?: Nullable<Arrayable<T | Array<T>>>
-): Array<T> => toArray(a).flat(1) as Array<T>
+type Flatten = {
+  <T>(a?: Nullable<ArrayLike<Many<T | Array<T>>>>): Array<T>
+  <T>(a?: Nullable<Many<T | Array<T>>>): Array<T>
+}
 
-export const mergeArrayable = <T>(...a: Nullable<Arrayable<T>>[]): Array<T> =>
-  a.flatMap((i) => toArray(i))
+export const flatten: Flatten = (a) => toArray(a).flat(1)
+export const flattenDeep: Flatten = (a) =>
+  toArray(a).flat(Number.POSITIVE_INFINITY)

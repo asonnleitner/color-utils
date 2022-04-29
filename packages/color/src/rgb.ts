@@ -1,5 +1,5 @@
 import { colors } from '@color-utils/colors'
-import { clamp, flattenArrayable, hasOwn, isString, isUndefined } from './utils'
+import { clamp, flatten, hasOwn, isString, isUndefined } from './utils'
 import {
   MAX_ALPHA,
   MAX_COLOR_CHANNEL,
@@ -7,7 +7,6 @@ import {
   MIN_ALPHA,
   MIN_COLOR_CHANNEL
 } from './constants'
-import type { Transparent } from './types'
 import type { NamedColor } from '@color-utils/colors'
 
 export type RGB<
@@ -28,10 +27,11 @@ const PERCENT_RE =
 
 const NAMED_RE = /^(\w+)$/
 
-export function getRGB<C extends string | NamedColor | Transparent>(
-  color?: C
-): RGB<number, number, number, number> | undefined
-export function getRGB<C>(color?: C): any {
+export type GetRGB = {
+  <C extends string>(color?: C): RGB<number, number, number, number>
+}
+
+export const getRGB: GetRGB = (color?: any): any => {
   if (!color || !isString(color)) return undefined
 
   const base: number[] = []
@@ -106,10 +106,6 @@ export function getRGB<C>(color?: C): any {
   if (isNamed) {
     const [, named] = NAMED_RE.exec(color) || []
 
-    if (named === 'transparent') {
-      return [0, 0, 0, 0]
-    }
-
     if (!hasOwn(colors, named)) return undefined
 
     base.push(...colors[named as NamedColor])
@@ -126,20 +122,17 @@ export function getRGB<C>(color?: C): any {
       )
 }
 
-export function toRGB<T extends number>(
-  rgb: RGB<T, T, T, T> | RGB<T, T, T>,
-  alpha?: T
-): string
-export function toRGB<T extends number>(
-  rgb: T[] | T[][],
-  alpha?: T | T[]
-): string
-export function toRGB<T extends number>(...args: T[]): string
-export function toRGB(...rgb: any): any {
-  const [red, green, blue, alpha] = flattenArrayable(rgb).map((v, i) =>
+export type ToRGB = {
+  <N extends number>(rgb: RGB<N, N, N, N> | RGB<N, N, N>, alpha?: N): string
+  <N extends number>(rgb: N[] | N[][], alpha?: N | N[]): string
+  <N extends number>(...args: N[]): string
+}
+
+export const toRGB: ToRGB = (...rgb): any => {
+  const [red, green, blue, alpha] = flatten(rgb).map((v, i) =>
     i === 3
-      ? clamp(v, MIN_ALPHA, MAX_ALPHA)
-      : clamp(v, MIN_COLOR_CHANNEL, MAX_COLOR_CHANNEL)
+      ? clamp(Number(v), MIN_ALPHA, MAX_ALPHA)
+      : clamp(Number(v), MIN_COLOR_CHANNEL, MAX_COLOR_CHANNEL)
   )
 
   return isUndefined(alpha)
@@ -147,20 +140,13 @@ export function toRGB(...rgb: any): any {
     : `rgba(${red}, ${green}, ${blue}, ${alpha})`
 }
 
-export function toRGBPercentage<T extends number>(
-  rgb: RGB<T, T, T, T> | RGB<T, T, T>,
-  alpha?: T
-): string
-export function toRGBPercentage<T extends number>(
-  rgb: T[] | T[][],
-  alpha?: T | T[]
-): string
-export function toRGBPercentage<T extends number>(...args: T[]): string
-export function toRGBPercentage(...rgb: any[]): any {
-  const [red, green, blue, alpha] = flattenArrayable(rgb).map((v, i) =>
+export type ToRGBPercent = ToRGB
+
+export const toRGBPercentage: ToRGBPercent = (...rgb) => {
+  const [red, green, blue, alpha] = flatten(rgb).map((v, i) =>
     i === 3
-      ? clamp(v, MIN_ALPHA, MAX_ALPHA)
-      : Math.round((v / MAX_COLOR_CHANNEL) * MAX_PERCENTAGE)
+      ? clamp(Number(v), MIN_ALPHA, MAX_ALPHA)
+      : Math.round((Number(v) / MAX_COLOR_CHANNEL) * MAX_PERCENTAGE)
   )
 
   return isUndefined(alpha)
