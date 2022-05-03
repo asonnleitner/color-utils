@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/asonnleitner/color-utils/tree/dev/packages/color#readme",
   "dependencies": {
-    "@color-utils/colors": "workspace:^1.0.0"
+    "@color-utils/colors": "workspace:^1.0.0",
+    "@color-utils/core": "workspace:^1.0.0"
   }
 }

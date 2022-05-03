@@ -1,8 +1,7 @@
 import { flatten, isUndefined } from './utils'
-import type { RGB } from './rgb'
 
 // convert decimal to hex
-const hexHex = <T extends number | string>(v: T): string => {
+const hexHex = (v: number | string): string => {
   const hex = Math.round(Number(v)).toString(16).toUpperCase()
   return hex.length === 1 ? `0${hex}` : hex
 }
@@ -30,17 +29,14 @@ export const fixHex = (hex: string | number) => {
   return `#${hex}`.toUpperCase()
 }
 
-export function toHEX<T extends number>(
-  rgb: RGB<T, T, T, T> | RGB<T, T, T>,
-  alpha?: T
-): string
-export function toHEX<T extends number>(
-  rgb: T[] | T[][],
-  alpha?: T | T[]
-): string
-export function toHEX<T extends number>(...args: T[]): string
-export function toHEX(...rgb: any): any {
-  const [red, green, blue, alpha] = flatten(rgb)
+export type ToHex = {
+  <N = number>(rgb: [N, N, N, N] | [N, N, N], alpha?: N): string
+  <N = number>(rgb: N[] | N[][], alpha?: N | N[]): string
+  <N = number>(...args: N[]): string
+}
+
+export const toHEX: ToHex = (...rgb) => {
+  const [red, green, blue, alpha] = flatten(rgb).map(Number)
 
   return isUndefined(alpha)
     ? `#${hexHex(red)}${hexHex(green)}${hexHex(blue)}`

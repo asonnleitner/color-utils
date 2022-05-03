@@ -30,6 +30,8 @@ describe('getRGB', () => {
     arrayContaining(getRGB('#c814e933'), [200, 20, 233, 0.2])
     arrayContaining(getRGB('#c814e900'), [200, 20, 233, 0])
     arrayContaining(getRGB('#c814e9ff'), [200, 20, 233, 1])
+    arrayContaining(getRGB('#c814e9'), [200, 20, 233, 1])
+    arrayContaining(getRGB('#fef'), [255, 238, 255, 1])
     arrayContaining(getRGB('rgba(200, 20, 233, 0.2)'), [200, 20, 233, 0.2])
     arrayContaining(getRGB('rgba(200 20 233 / 0.2)'), [200, 20, 233, 0.2])
     arrayContaining(getRGB('rgba(200 20 233 / 20%)'), [200, 20, 233, 0.2])

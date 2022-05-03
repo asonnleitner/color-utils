@@ -5,8 +5,8 @@ export type Many<T> = T | ReadonlyArray<T>
 export const isArray = Array.isArray
 
 type ToArray = {
-  <T>(a?: Nullable<Record<string | number, T>>): Array<T>
-  <T>(a?: Nullable<Many<T>>): Array<T>
+  <T>(a?: Record<string | number, T>): Array<T>
+  <T>(a?: Many<T>): Array<T>
   <T>(a?: T): Array<T[keyof T]>
 }
 
@@ -21,5 +21,6 @@ type Flatten = {
 }
 
 export const flatten: Flatten = (a) => toArray(a).flat(1)
+
 export const flattenDeep: Flatten = (a) =>
   toArray(a).flat(Number.POSITIVE_INFINITY)

@@ -8,7 +8,7 @@ import {
 } from './constants'
 import { getRGB } from './rgb'
 import type { NamedColor } from '@color-utils/colors'
-import type { GetRGB, RGB } from './rgb'
+import type { GetRGB } from './rgb'
 
 const colors = new Map<string, NamedColor>()
 Object.keys(c).map((key) =>
@@ -17,10 +17,10 @@ Object.keys(c).map((key) =>
 
 export type GetNamed = GetRGB
 
-export const getNamed = getRGB
+export const getNamed: GetNamed = getRGB
 
 export type ToNamed = {
-  <T extends number>(rgb: RGB<T, T, T, T> | RGB<T, T, T>, alpha?: T): string
+  <T extends number>(rgb: [T, T, T, T] | [T, T, T], alpha?: T): string
   <T extends number>(rgb: T[] | T[][], alpha?: T | T[]): string
   <T extends number>(...args: T[]): string
 }

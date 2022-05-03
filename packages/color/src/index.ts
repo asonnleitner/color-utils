@@ -2,9 +2,9 @@ import { getHWB } from './hwb'
 import { isString } from './utils'
 import { getHSL } from './hsl'
 import { getRGB } from './rgb'
-import type { NamedColor } from '@color-utils/colors'
-import type { RGB } from './rgb'
-import type { HSL } from './hsl'
+import type { GetHWB } from './hwb'
+import type { GetRGB } from './rgb'
+import type { GetHSL } from './hsl'
 
 export * from './rgb'
 export * from './hsl'
@@ -15,16 +15,9 @@ export * from './hex'
 // provide utils
 export * from './utils'
 
-export function getColor<C extends string | NamedColor>(
-  color?: C
-): RGB<number, number, number, number> | undefined
-export function getColor<C extends string>(
-  color?: C
-): HSL<number, number, number, number> | undefined
-export function getColor<C extends string>(
-  color?: C
-): HSL<number, number, number, number> | undefined
-export function getColor(color?: any): any {
+export type GetColor = GetRGB | GetHSL | GetHWB
+
+export const getColor: GetColor = (color) => {
   if (!color || !isString(color)) return undefined
   color = String(color).toLowerCase()
 

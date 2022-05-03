@@ -8,20 +8,14 @@ import {
   MIN_PERCENTAGE
 } from './constants'
 
-export type HSL<
-  Hue extends number,
-  Saturation extends number,
-  Lightness extends number,
-  Alpha extends number | void = void
-> = [Hue, Saturation, Lightness, Alpha]
-
 const HSL_RE =
   /^hsla?\(\s*([+-]?(?:\d{0,3}\.)?\d+)(?:deg)?\s*,?\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*(?:[,|/]\s*([+-]?(?=\.\d|\d)(?:0|[1-9]\d*)?(?:\.\d*)?(?:[eE][+-]?\d+)?)\s*)?\)$/
 
-export function getHSL<C extends string>(
-  color?: C
-): HSL<number, number, number, number> | undefined
-export function getHSL<C>(color?: C): any {
+export type GetHSL = {
+  (color?: string): [number, number, number, number] | undefined
+}
+
+export const getHSL: GetHSL = (color) => {
   if (!color || !isString(color)) return undefined
 
   const hsl = HSL_RE.exec(color) || []
@@ -38,16 +32,13 @@ export function getHSL<C>(color?: C): any {
   ]
 }
 
-export function toHSL<T extends number>(
-  hsl: HSL<T, T, T, T> | HSL<T, T, T>,
-  alpha?: T
-): string
-export function toHSL<T extends number>(
-  hsl: T[] | T[][],
-  alpha?: T | T[]
-): string
-export function toHSL<T extends number>(...args: T[]): string
-export function toHSL(...hsl: any): any {
+export type ToHSL = {
+  <N = number>(hsl: [N, N, N, N] | [N, N, N], alpha?: N): string
+  <N = number>(hsl: N[] | N[][], alpha?: N | N[]): string
+  <N = number>(...args: N[]): string
+}
+
+export const toHSL: ToHSL = (...hsl) => {
   const [hue, saturation, lightness, alpha] = flatten(hsl).map((v, i) =>
     i === 0
       ? clamp(v, MIN_HUE, MAX_HUE)

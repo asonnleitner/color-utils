@@ -7,46 +7,40 @@ import {
   MIN_ALPHA,
   MIN_COLOR_CHANNEL
 } from './constants'
+import { fixHex } from './hex'
 import type { NamedColor } from '@color-utils/colors'
 
-export type RGB<
-  Red extends number,
-  Green extends number,
-  Blue extends number,
-  Alpha extends number | void = void
-> = [Red, Green, Blue, Alpha]
-
-const HEX_SHORT_RE = /^#([a-fA-F\d]{3,4})$/i
-const HEX_RE = /^#([a-fA-F\d]{6})([a-fA-F\d]{2})?$/i
+const HEX_ALPHA_RE = /^#([a-f\d]{6})([a-f\d]{2})?$/i
+const HEX_RE = /^#([a-f\d]{3,4})$|^#([a-f\d]{6})([a-f\d]{2})?$/i
 
 const RGBA_RE =
   /^rgba?\(\s*([+-]?\d+)(?=[\s,])\s*(?:,\s*)?([+-]?\d+)(?=[\s,])\s*(?:,\s*)?([+-]?\d+)\s*(?:[,|/]\s*([+-]?[\d.]+)(%?)\s*)?\)$/
 
-const PERCENT_RE =
+const RGB_PERCENT_RE =
   /^rgba?\(\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*(?:[,|/]\s*([+-]?[\d.]+)(%?)\s*)?\)$/
 
 const NAMED_RE = /^(\w+)$/
 
 export type GetRGB = {
-  <C extends string>(color?: C): RGB<number, number, number, number>
+  (color?: string): [number, number, number, number] | undefined
 }
 
-export const getRGB: GetRGB = (color?: any): any => {
+export const getRGB: GetRGB = (color): any => {
   if (!color || !isString(color)) return undefined
 
-  const base: number[] = []
+  const base = []
 
   const isHex = HEX_RE.test(color)
-  const isShortHex = HEX_SHORT_RE.test(color)
   const isRGBA = RGBA_RE.test(color)
-  const isPercent = PERCENT_RE.test(color)
+  const isPercent = RGB_PERCENT_RE.test(color)
   const isNamed = NAMED_RE.test(color)
 
   if (isHex) {
-    const [, hex, alpha] = HEX_RE.exec(color) || []
+    color = fixHex(color)
+    const [, hex, alpha] = HEX_ALPHA_RE.exec(color) || []
 
     const [, red, green, blue] =
-      /^#?([a-fA-F\d]{2})([a-fA-F\d]{2})([a-fA-F\d]{2})$/i.exec(hex) || []
+      /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) || []
 
     base.push(parseInt(red, 16), parseInt(green, 16), parseInt(blue, 16))
 
@@ -55,22 +49,6 @@ export const getRGB: GetRGB = (color?: any): any => {
         // round to 2 decimal places
         Number((parseInt(alpha, 16) / MAX_COLOR_CHANNEL).toFixed(2))
       )
-    }
-  }
-
-  if (isShortHex) {
-    const [, hex, _, alpha] = HEX_SHORT_RE.exec(color) || []
-    const [, red, green, blue] =
-      /^#?([a-fA-F\d])([a-fA-F\d])([a-fA-F\d])$/i.exec(hex) || []
-
-    base.push(
-      parseInt(red + red, 16),
-      parseInt(green + green, 16),
-      parseInt(blue + blue, 16)
-    )
-
-    if (alpha) {
-      base.push(parseInt(alpha + alpha, 16) / MAX_COLOR_CHANNEL)
     }
   }
 
@@ -88,7 +66,8 @@ export const getRGB: GetRGB = (color?: any): any => {
   }
 
   if (isPercent) {
-    const [, red, green, blue, alpha, percent] = PERCENT_RE.exec(color) || []
+    const [, red, green, blue, alpha, percent] =
+      RGB_PERCENT_RE.exec(color) || []
     const roundChannel = (n: string) =>
       Math.round(Number(n) * (MAX_COLOR_CHANNEL / 100))
 
@@ -123,16 +102,16 @@ export const getRGB: GetRGB = (color?: any): any => {
 }
 
 export type ToRGB = {
-  <N extends number>(rgb: RGB<N, N, N, N> | RGB<N, N, N>, alpha?: N): string
-  <N extends number>(rgb: N[] | N[][], alpha?: N | N[]): string
-  <N extends number>(...args: N[]): string
+  <N = number>(rgb: [N, N, N, N] | [N, N, N], alpha?: N): string
+  <N = number>(rgb: N[] | N[][], alpha?: N | N[]): string
+  <N = number>(...args: N[]): string
 }
 
 export const toRGB: ToRGB = (...rgb): any => {
   const [red, green, blue, alpha] = flatten(rgb).map((v, i) =>
     i === 3
-      ? clamp(Number(v), MIN_ALPHA, MAX_ALPHA)
-      : clamp(Number(v), MIN_COLOR_CHANNEL, MAX_COLOR_CHANNEL)
+      ? clamp(v, MIN_ALPHA, MAX_ALPHA)
+      : clamp(v, MIN_COLOR_CHANNEL, MAX_COLOR_CHANNEL)
   )
 
   return isUndefined(alpha)
